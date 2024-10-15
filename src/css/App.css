@@ -130,3 +130,7 @@ div.search.container img {
               user-select: none;
                    margin: auto;
 }
+
+.dragged-over {
+	background-color: #DDD;
+}
