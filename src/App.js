@@ -2,8 +2,8 @@ import './css/App.css';
 import './css/shapes.css';
 import { useEffect, useState, useRef } from 'react';
 import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
-import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine"; // NEW
-import { attachClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"; // NEW
+import { combine } from "@atlaskit/pragmatic-drag-and-drop/combine";
+import { attachClosestEdge, extractClosestEdge } from "@atlaskit/pragmatic-drag-and-drop-hitbox/closest-edge"; 
 import lupa from "./image/lupa.png";
 import table from "./image/table.png";
 import copy from "./image/copy.png";
@@ -16,15 +16,15 @@ function App() {
       <SearchContainer />
       <ToolbarContainer />
       <RightbarContainer />
-      <WorkspaceContainer />
+      <WorkspaceContainer/>
     </>
   );
 }
 
 function HeaderContainer() {
   return ( 
-    <header class="header container">
-    <span class="logo">Логотип</span>
+    <header className="header container">
+    <span className="logo">Логотип</span>
     <nav>
       <ul>
         <li><a href="#">Имя файла</a></li>
@@ -41,7 +41,7 @@ function HeaderContainer() {
 
 function SearchContainer() {
   return (
-    <div class="search container">
+    <div className="search container">
     <input type="text" />
     <img src={lupa} alt="Лупа" />
   </div>
@@ -50,16 +50,16 @@ function SearchContainer() {
 
 function ToolbarContainer() {
   return (
-    <div class="toolbar container">
-			<nav class="tools">
+    <div className="toolbar container">
+			<nav className="tools">
 				<h3>Класс 1</h3>
-				<ul class="tools">
+				<ul className="tools">
 					<Rectangle />
 					<Oval />
 					<li>Стрелка</li>
 				</ul>
 				<h3>Класс 2</h3>
-				<ul class="tools">
+				<ul className="tools">
 					<li>Треугольник</li>
 					<li>Элемент 5</li>
 					<li>Элемент 6</li>
@@ -73,7 +73,7 @@ function ToolbarContainer() {
 
 function RightbarContainer() {
   return (
-		<div class="rightbar container">
+		<div className="rightbar container">
     <nav>
       <img src={copy} alt="Копировать" />
       <img src={table} alt="Таблица" />
@@ -98,12 +98,11 @@ function WorkspaceContainer({columnId, title, rects}) {
         onDragLeave: () => setIsDraggedOver(false),
         onDrop: () => setIsDraggedOver(false),
         getData: () => ({ columnId }),
-        getIsSticky: () => true,
     });
   }, [columnId]);
   return (
     <div ref={spaceRef} 
-    class="workspace container">
+    className={`workspace container ${isDraggedOver ? "dragged-over" : ""}`}>
     </div>
   );
 }
@@ -111,6 +110,7 @@ function WorkspaceContainer({columnId, title, rects}) {
 const Rectangle = (children, ...rect) => {
   const ref = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [closestEdge, setClosestEdge] = useState(null); 
 
   useEffect(() => {
     const rectE1 = ref.current;
@@ -127,7 +127,6 @@ const Rectangle = (children, ...rect) => {
       element: rectE1,
       getData: ({ input, element }) => {
         const data = { type: "rectangle", rectId: rect.id};
-
         return attachClosestEdge(data, {
           input,
           element,
@@ -137,16 +136,27 @@ const Rectangle = (children, ...rect) => {
       getIsSticky: () => true,
       onDragEnter: (args) => {
         if (args.source.data.rectId != rect.id) {
-          console.log("onDragEvent", args);
+          setClosestEdge(extractClosestEdge(args.self.data));
         }
-      }
+      },
+      onDrag: (args) => {
+        if (args.source.data.rectId != rect.id) {
+          setClosestEdge(args.self.data);
+        }
+      },
+      onDragLeave: () => {
+        setClosestEdge(null);
+      },
+      onDrop: () => {
+        setClosestEdge(null);
+      },
     })
   );
   }, [rect.id]);
 
   return (
     <div
-      class="rectangle" 
+      className={`rectangle ${isDragging ? "dragging" : ""}`} 
       ref={ref}>
     </div>
   );
@@ -191,7 +201,7 @@ const Oval = (children, ...oval) => {
   return (
     <div
       ref={ref}
-      class="oval"></div>
+      className={`oval ${isDragging ? "dragging" : ""}`}></div>
   )
 }
 
