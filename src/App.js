@@ -15,28 +15,28 @@ function App() {
       <HeaderContainer />
       <SearchContainer />
       <ToolbarContainer />
-		  <RightbarContainer />
+      <RightbarContainer />
       <WorkspaceContainer />
     </>
   );
 }
 
 function HeaderContainer() {
-return ( 
-<header class="header container">
-  <span class="logo">Логотип</span>
-  <nav>
-    <ul>
-      <li><a href="#">Имя файла</a></li>
-      <li><a href="#">Файл</a></li>
-      <li><a href="#">Поделиться</a></li>
-      <li><a href="#">Экспортировать</a></li>
-      <li><a href="#">Вид</a></li>
-      <li><a href="#">Настройки</a></li>
-    </ul>
-  </nav>
-</header>
-)
+  return ( 
+    <header class="header container">
+    <span class="logo">Логотип</span>
+    <nav>
+      <ul>
+        <li><a href="#">Имя файла</a></li>
+        <li><a href="#">Файл</a></li>
+        <li><a href="#">Поделиться</a></li>
+        <li><a href="#">Экспортировать</a></li>
+        <li><a href="#">Вид</a></li>
+        <li><a href="#">Настройки</a></li>
+      </ul>
+    </nav>
+    </header>
+  );
 }
 
 function SearchContainer() {
@@ -45,7 +45,7 @@ function SearchContainer() {
     <input type="text" />
     <img src={lupa} alt="Лупа" />
   </div>
-  )
+  );
 }
 
 function ToolbarContainer() {
@@ -55,7 +55,7 @@ function ToolbarContainer() {
 				<h3>Класс 1</h3>
 				<ul class="tools">
 					<Rectangle />
-					<li>Овал</li>
+					<Oval />
 					<li>Стрелка</li>
 				</ul>
 				<h3>Класс 2</h3>
@@ -68,7 +68,7 @@ function ToolbarContainer() {
 				</ul>
 			</nav>
 		</div>
-  )
+  );
 }
 
 function RightbarContainer() {
@@ -80,7 +80,7 @@ function RightbarContainer() {
       <img src={lupa} alt="Лупа" />
     </nav>
   </div>
-  )
+  );
 }
 
 function WorkspaceContainer({columnId, title, rects}) {
@@ -105,7 +105,7 @@ function WorkspaceContainer({columnId, title, rects}) {
     <div ref={spaceRef} 
     class="workspace container">
     </div>
-  )
+  );
 }
 
 const Rectangle = (children, ...rect) => {
@@ -149,6 +149,50 @@ const Rectangle = (children, ...rect) => {
       class="rectangle" 
       ref={ref}>
     </div>
+  );
+}
+
+const Oval = (children, ...oval) => {
+  const ref = useRef(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    const ovalE1 = ref.current;
+    invariant(ovalE1);
+
+    return combine(
+      draggable({
+      element: ovalE1,
+      getInitialData: () => ({ type: "oval", ovalId: oval.id }), 
+      onDragStart: () => setIsDragging(true),
+      onDrop: () => setIsDragging(false),
+    }),
+    dropTargetForElements({
+      element: ovalE1,
+      getData: ({ input, element }) => {
+        const data = { type: "oval", ovalId: oval.id};
+
+        return attachClosestEdge(data, {
+          input,
+          element,
+          allowedEdges: ["top", "bottom"],
+        });
+      },
+      getIsSticky: () => true,
+      onDragEnter: (args) => {
+        if (args.source.data.ovalId != oval.id) {
+          console.log("onDragEvent", args);
+        }
+      }
+    })
+  );
+  }, [oval.id]);
+
+  return (
+    <div
+      ref={ref}
+      class="oval"></div>
   )
 }
+
 export default App;
