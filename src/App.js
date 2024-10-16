@@ -6,7 +6,7 @@ import lupa from "./image/lupa.png";
 import table from "./image/table.png";
 import copy from "./image/copy.png";
 
-function App() {
+const App = () => {
   return (
     <>
       <HeaderContainer />
@@ -18,7 +18,7 @@ function App() {
   );
 }
 
-function HeaderContainer() {
+const HeaderContainer = () => {
   return ( 
     <header className="header container">
     <span className="logo">Логотип</span>
@@ -36,7 +36,7 @@ function HeaderContainer() {
   );
 }
 
-function SearchContainer() {
+const SearchContainer = () => {
   return (
     <div className="search container">
     <input type="text" />
@@ -77,19 +77,19 @@ const ToolbarContainer = ({onDrop}) => {
   );
 }
 
-function RightbarContainer() {
+const RightbarContainer = () => {
   return (
-		<div className="rightbar container">
-    <nav>
-      <img src={copy} alt="Копировать" />
-      <img src={table} alt="Таблица" />
-      <img src={lupa} alt="Лупа" />
-    </nav>
-  </div>
+		<div className="rightbar container">  
+      <nav>
+        <img className='icon' src={copy} alt="Копировать"/>
+        <img className='icon' src={table} alt="Таблица" />
+        <img className='icon' src={lupa} alt="Лупа" />
+      </nav>
+    </div>
   );
 }
 
-function WorkspaceContainer() {
+const WorkspaceContainer = () => {
   const [shapes, setShapes] = useState([]);
 
   const handleDrop = (e) => {
