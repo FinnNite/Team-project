@@ -100,6 +100,7 @@ header nav ul a:hover {
 	width: 50px;
 }
 
+/* Рабочее пространство */
 .workspace {
 	position: absolute;
 	top: 7vh;
@@ -121,6 +122,7 @@ div.search.container img {
 	top: 6px;
 }
 
+/* Запрет на выделение */
 .noselect {
     -webkit-touch-callout: none;
       -webkit-user-select: none;
@@ -131,6 +133,7 @@ div.search.container img {
                    margin: auto;
 }
 
+/* Эффект во время переноса элемента над рабочим пространством*/
 .dragged-over {
 	background-color: #DDD;
 }
