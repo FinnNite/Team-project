@@ -1,11 +1,12 @@
-import './css/App.css';
-import './css/shapes.css';
-import { Rectangle, Oval, Arrow } from './shapes.js';
-import { useState } from 'react';
+import "./css/App.css";
+import "./css/shapes.css";
+import { Rectangle, Oval, Arrow } from "./shapes.js";
+import { useState } from "react";
 import lupa from "./image/lupa.png";
 import table from "./image/table.png";
 import copy from "./image/copy.png";
 
+// Главная функция
 const App = () => {
   return (
     <>
@@ -13,11 +14,12 @@ const App = () => {
       <SearchContainer />
       <ToolbarContainer />
       <RightbarContainer />
-      <WorkspaceContainer columnId={1} title={"WSContainer"} />
+      <WorkspaceContainer />
     </>
   );
 }
 
+// Контейнер заголовка
 const HeaderContainer = () => {
   return ( 
     <header className="header container">
@@ -36,6 +38,7 @@ const HeaderContainer = () => {
   );
 }
 
+// Контейнер поиска
 const SearchContainer = () => {
   return (
     <div className="search container">
@@ -45,11 +48,12 @@ const SearchContainer = () => {
   );
 }
 
+// Контейнер панели инструментов
 const ToolbarContainer = ({onDrop}) => {
   const itemsClass1 = [
-  { component: <Rectangle/>, type: 'rectangle' },
-  { component: <Oval/>, type: 'oval'}, 
-  { component: <Arrow/>, type: 'arrow'}]
+  { component: <Rectangle/>, type: "rectangle" },
+  { component: <Oval/>, type: "oval"}, 
+  { component: <Arrow/>, type: "arrow"}]
   return (
     <div className="toolbar container">
 			<nav className="tools">
@@ -58,7 +62,7 @@ const ToolbarContainer = ({onDrop}) => {
 					{itemsClass1.map((item, index) => (
             <div key={index} 
             draggable 
-            onDragStart={(e) => e.dataTransfer.setData('text/plain', item.type)}
+            onDragStart={(e) => e.dataTransfer.setData("text/plain", item.type)}
             >
               {item.component}
               </div>
@@ -77,24 +81,26 @@ const ToolbarContainer = ({onDrop}) => {
   );
 }
 
+// Контейнер правой панели
 const RightbarContainer = () => {
   return (
 		<div className="rightbar container">  
       <nav>
-        <img className='icon' src={copy} alt="Копировать"/>
-        <img className='icon' src={table} alt="Таблица" />
-        <img className='icon' src={lupa} alt="Лупа" />
+        <img className="icon" src={copy} alt="Копировать"/>
+        <img className="icon" src={table} alt="Таблица" />
+        <img className="icon" src={lupa} alt="Лупа" />
       </nav>
     </div>
   );
 }
 
+// Контейнер рабочего пространства
 const WorkspaceContainer = () => {
   const [shapes, setShapes] = useState([]);
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const shape = e.dataTransfer.getData('text/plain');
+    const shape = e.dataTransfer.getData("text/plain");
     if (shape) {
       setShapes((prevShapes) => [...prevShapes, shape])
     }
@@ -112,13 +118,11 @@ const WorkspaceContainer = () => {
       <h3>Canvas</h3>
       {shapes.map((shape, index) => (
         <div key={index}>
-          {shape === 'rectangle' ? <Rectangle/> : (shape === 'oval' ? <Oval/> : (shape === 'arrow' ? <Arrow/> : null))}
+          {shape === "rectangle" ? <Rectangle/> : (shape === "oval" ? <Oval/> : (shape === "arrow" ? <Arrow/> : null))}
         </div>
       ))}
     </div>
   );
 }
-
-
 
 export default App;
