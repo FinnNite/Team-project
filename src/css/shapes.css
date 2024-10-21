@@ -21,12 +21,8 @@
 
 /* Стрелка */
 .arrow {
-    width: 0;
-    height: 0;
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    border-left: 15px solid black;
-    margin: 5px;
+    stroke-width: 2;
+    stroke: black;
 }
 
 /* Эффект переносимого объекта */
