@@ -1,10 +1,10 @@
-import "./css/App.css";
-import "./css/shapes.css";
+import "../css/App.css";
 import { Rectangle, Oval, Arrow } from "./shapes.js";
-import { useState } from "react";
-import lupa from "./image/lupa.png";
-import table from "./image/table.png";
-import copy from "./image/copy.png";
+import { WorkspaceContainer } from "./workspace.js"
+import { useState, useRef } from "react";
+import lupa from "../image/lupa.png";
+import table from "../image/table.png";
+import copy from "../image/copy.png";
 
 // Главная функция
 const App = () => {
@@ -53,7 +53,8 @@ const ToolbarContainer = ({onDrop}) => {
   const itemsClass1 = [
   { component: <Rectangle/>, type: "rectangle" },
   { component: <Oval/>, type: "oval"}, 
-  { component: <Arrow/>, type: "arrow"}]
+  { component: <Arrow x1={0} x2={50} y1={0} y2={0}/>, type: "arrow"}]
+
   return (
     <div className="toolbar container">
 			<nav className="tools">
@@ -61,7 +62,6 @@ const ToolbarContainer = ({onDrop}) => {
 				<ul className="tools">
 					{itemsClass1.map((item, index) => (
             <div key={index} 
-            draggable 
             onDragStart={(e) => e.dataTransfer.setData("text/plain", item.type)}
             >
               {item.component}
@@ -90,37 +90,6 @@ const RightbarContainer = () => {
         <img className="icon" src={table} alt="Таблица" />
         <img className="icon" src={lupa} alt="Лупа" />
       </nav>
-    </div>
-  );
-}
-
-// Контейнер рабочего пространства
-const WorkspaceContainer = () => {
-  const [shapes, setShapes] = useState([]);
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    const shape = e.dataTransfer.getData("text/plain");
-    if (shape) {
-      setShapes((prevShapes) => [...prevShapes, shape])
-    }
-  }
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-  }
-
-  return (
-    <div onDrop={handleDrop}
-      onDragOver={handleDragOver}
-      className={"workspace container"}
-    >
-      <h3>Canvas</h3>
-      {shapes.map((shape, index) => (
-        <div key={index}>
-          {shape === "rectangle" ? <Rectangle/> : (shape === "oval" ? <Oval/> : (shape === "arrow" ? <Arrow/> : null))}
-        </div>
-      ))}
     </div>
   );
 }

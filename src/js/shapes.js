@@ -1,4 +1,4 @@
-import "./css/shapes.css"
+import "../css/shapes.css"
 import { useEffect, useState, useRef } from "react";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import invariant from "tiny-invariant";
@@ -57,13 +57,13 @@ export const Oval = () => {
     )
 }
 
-// Стрелка
-export const Arrow = () => {
+// Стрелка (не работает)
+export const Arrow = (x1, y1, x2, y2) => {
   // Сохраняем объект в ref
     const ref = useRef(null);
     // Состояние переноса стрелки
     const [isDragging, setIsDragging] = useState(false);
-  
+
     // Эффект при переносе стрелки
     useEffect(() => {
       const arrowE1 = ref.current;
@@ -75,11 +75,24 @@ export const Arrow = () => {
         onDrop: () => setIsDragging(false),
       });
     });
-  
+
     return (
-      <div
-        ref={ref}
-        className={`arrow ${isDragging ? "dragging" : ""}`}
-      />
-    )
+      <svg>
+        <div>
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="0" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="black" />
+          </marker>
+        </defs>
+        <line ref={ref}
+          x1={x1.x1}
+          y1={x1.y1}
+          x2={x1.x2}
+          y2={x1.y2}
+          markerEnd="url(#arrow)"
+          className={`arrow${isDragging ? " dragging" : ""}`}
+        />
+        </div>
+      </svg>
+    );
 }
